@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import geography
 import get
 import json
@@ -66,7 +67,7 @@ class Population(object):
                         column_names.append(h)
                 table = PrettyTable(column_names)
             elif i > 0:
-                row_data = {}
+                row_data = OrderedDict()
                 for j, e in enumerate(d):
                     if header[j] == 'county':
                         cd = str(int(e))
@@ -96,7 +97,7 @@ class Population(object):
                     o = '|'.join(column_names) + '\n'
                     f.write(o)
             elif i > 0:
-                row_data = {}
+                row_data = OrderedDict()
                 for j, e in enumerate(d):
                     if header[j] == 'county':
                         cd = str(int(e))
@@ -156,20 +157,21 @@ def main(argv=None):
                                    get.pop['population']['latino']],
                          'year' : 2010},
                        {'state' : 'Tennessee',
-                        'zip' : '*' } )
+                        'county' : '*' } )
 
-        # pop.pretty_print(d, ['total', 'white', 'black', 'native', 'asian', 'pacific', 'latino', 'state', 'zip'])
-        pop.raw_print(d, ['total', 'white', 'black', 'native', 'asian', 'pacific', 'latino', 'state', 'zip'], print_header=True)
+        # pop.pretty_print(d, ['total', 'white', 'black', 'native', 'asian', 'pacific', 'latino', 'state', 'county'])
+        pop.raw_print(d, ['total', 'white', 'black', 'native', 'asian', 'pacific', 'latino', 'state', 'county'])
     else:
         d = pop.query( { 'source' : pop.economic,
                          'data' : [get.econ['median'],
                                    get.econ['mean'],
                                    get.econ['capita']],
                          'year' : 2012},
-                       {'zip' : '*'} )
+                       {'state' : 'Texas',
+                        'county' : '*'} )
                         
-        # pop.pretty_print(d, ['median', 'mean', 'capita', 'zip'], replace = {'N':0,'-':0})
-        pop.raw_print(d, ['median', 'mean', 'capita', 'zip'], print_header=True, replace = {'N':0,'-':0})
+        # pop.pretty_print(d, ['median', 'mean', 'capita', 'state', 'county'], replace = {'N':0,'-':0})
+        pop.raw_print(d, ['median', 'mean', 'capita', 'state', 'county'], replace = {'N':0,'-':0})
 
 if __name__ == "__main__":
     main(sys.argv)

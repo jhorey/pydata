@@ -143,8 +143,6 @@ def main(argv=None):
     geo.load_state_codes(os.path.join(argv[1], "state_codes"))
     geo.download_counties(os.path.join(argv[1], "county_codes"))
     geo.download_zip(os.path.join(argv[1], "zip_codes"))
-    geo.load_county_codes(os.path.join(argv[1], "county_codes"))
-    geo.load_zip_codes(os.path.join(argv[1], "zip_codes"))
 
 if __name__ == "__main__":
     main(sys.argv)
