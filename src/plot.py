@@ -84,15 +84,20 @@ def _color_econ_data(state_abbr, county_xs, county_ys, median_econ_data, highest
 
 def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200):
     patches(county_xs, county_ys, fill_color=county_colors, fill_alpha=0.7,
-            line_color="white", line_width=0.5, plot_height=height, plot_width=width, title="Tennessee Median Income")
+            line_color="white", line_width=0.5, plot_height=height, plot_width=width, title="Median Income")
     grid().grid_line_color = None
     axis().axis_line_color = None
     axis().major_tick_line_color = None
     show()
 
 tools = "box_zoom,reset"
-# output_file("geospatial.html")
-output_server("gs", title="Geospatial Example")
+output_file("geospatial.html")
+# output_server("gs", title="Geospatial Example")
+
+county_xs, county_ys, econ_data, highest_median = _get_econ_data('nc')
+county_colors = _color_econ_data('tx', county_xs, county_ys, econ_data, highest_median)
+_output_econ_data(county_xs, county_ys, county_colors, 500, 250)
+
 
 county_xs, county_ys, econ_data, highest_median = _get_econ_data('tn')
 county_colors = _color_econ_data('tn', county_xs, county_ys, econ_data, highest_median)
