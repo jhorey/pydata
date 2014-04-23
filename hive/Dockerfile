@@ -1,9 +1,8 @@
-# FROM ferry/cassandra-client
-FROM ubuntu:12.04
+FROM ferry/cassandra-client
 NAME pydata/census
 
 # Install everything
-RUN apt-get --yes install g++ build-essential python-dev python-pip python-scientific python-pandas redis-server
+RUN apt-get --yes install build-essential python-dev python-pip python-scientific python-pandas redis-server
 RUN mkdir -p /home/ferry/pydata
 WORKDIR /home/ferry/pydata
 ADD ./src /home/ferry/pydata/

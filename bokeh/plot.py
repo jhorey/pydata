@@ -91,13 +91,12 @@ def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200
     show()
 
 tools = "box_zoom,reset"
-output_file("geospatial.html")
-# output_server("gs", title="Geospatial Example")
+# output_file("geospatial.html")
+output_server("gs", title="Geospatial Example")
 
 county_xs, county_ys, econ_data, highest_median = _get_econ_data('nc')
 county_colors = _color_econ_data('tx', county_xs, county_ys, econ_data, highest_median)
 _output_econ_data(county_xs, county_ys, county_colors, 500, 250)
-
 
 county_xs, county_ys, econ_data, highest_median = _get_econ_data('tn')
 county_colors = _color_econ_data('tn', county_xs, county_ys, econ_data, highest_median)
