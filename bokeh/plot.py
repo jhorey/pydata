@@ -1,4 +1,5 @@
 import csv
+import sys
 from bokeh.sampledata import us_counties, unemployment
 from bokeh.plotting import *
 
@@ -7,7 +8,6 @@ from bokeh.plotting import *
 # lat/lon points that represents a polygon. 
 # Then for each element, we assign a color to that polygon.
 
-data_dir = '../data'
 colors = ['#993355',
           '#3333FF',
           '#3399FF',
@@ -90,12 +90,14 @@ def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200
     axis().major_tick_line_color = None
     show()
 
+data_dir = sys.argv[1]
+
 tools = "box_zoom,reset"
 # output_file("geospatial.html")
 output_server("gs", title="Geospatial Example")
 
-county_xs, county_ys, econ_data, highest_median = _get_econ_data('nc')
-county_colors = _color_econ_data('tx', county_xs, county_ys, econ_data, highest_median)
+county_xs, county_ys, econ_data, highest_median = _get_econ_data('ky')
+county_colors = _color_econ_data('ky', county_xs, county_ys, econ_data, highest_median)
 _output_econ_data(county_xs, county_ys, county_colors, 500, 250)
 
 county_xs, county_ys, econ_data, highest_median = _get_econ_data('tn')

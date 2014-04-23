@@ -14,7 +14,9 @@
 - Ok installation finished!
 - Then the user reads about "bokeh-server". Starting bokeh-server throws an error
   because the user needs to install Redis. 
-- Ok install Redis via apt-get or yum. 
+- Ok install Redis via apt-get or yum. Oh, it turns out that you're running Ubuntu 12.04 which
+  comes with an older version of Redis. You'll have to grab a newer version by manually adding
+  a PPA. 
 - Now finally, they can create a few plots and serve them via bokeh
 - But he's just getting started and would like some examples, ideally some that
   he can just clone & run. 
@@ -49,13 +51,29 @@
 - This is where Docker steps in. 
 - It is a very simple mechanism to create a fully reproducible runtime environment.
 
+- Now you're becoming really famous for your awesome Docker demo. Someone suggests that , 'hey maybe you can turn this demo into
+  a startup'. Perhaps a service to generate custom maps using different datasets. Definately you'll include Census and ACS. You're
+  thinking of also including daily weather from the Weather Underground. They have a nice API. Also, you could include geospatially
+  tagged Tweets. Maybe even traffic related data via the MapQuest API. 
+- So you begin thinking, ok how do we do this? 
+- You have lots of different data sources, and you need some consistent way of updating and access the data. So you decide to put
+  everything into a database. 
+- You've heard Cassandra is pretty cool and scalable and all that good stuff. So why not? 
 
+- So you begin developing your application (all in Python of course). You extend the Census & ACS programs to include even more data. 
+  You create a new program to fetch and transform the weather data. Another for the traffic data. 
+- You really like Docker and the fact that it lets you create reproducible environments, so each application gets its own Dockerfile. This
+  also makes it easier to share and test with the rest of the team. 
 
-- Now you're becoming really famous for your awesome Docker demo. People think that understanding geospatial economic data is
-  actually quite useful. One of your friends wants to integrate this data into their future data warehouse (which isn't built yet). 
-  Wouldn't it be great if you could modify your script to work over Cassandra? Or maybe Hadoop? How hard could that be? 
+- So then you also decide you're going to make Cassandra its own Docker service. It's slightly more painful than setting up the Python
+  application Dockerfiles, but after a few hours you seem to have a single node Cassandra service. 
+- Then you read about how to plug this into each of the application services. They'll need to know the IP of the Cassandra service and have the various
+  drivers installed. 
+- Now, one of your developers on your team wants their own instance of the entire service (all the application servers and the Cassandra instance) 
+  because he's working on the unified web interface and needs to make sure everything works. 
+- So you write a bunch of scripts that orchestrates all of this. It's in bash, which has its own sort of horrific beauty. 
+- Hopefully no will need to turn these services on and off because, you know, that might break things :(
+- So you begin thinking, hmmm is there a better way to do this? 
 
-- Ok... you could install Cassandra (and then Hadoop) and encapsulate that into your Dockerfile. So spin up your browser and start
-  poking around.
 
 - This is when you discover Ferry. 

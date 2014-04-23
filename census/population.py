@@ -143,8 +143,10 @@ class Population(object):
             print e.explanation
 
 def main(argv=None):    
-    pop = Population(input_dir = argv[2],
-                     output_file = argv[3])
+    state = argv[2]
+    
+    pop = Population(input_dir = argv[3],
+                     output_file = argv[4])
 
     if argv[1] == "demographics":                     
         d = pop.query( { 'source' : pop.population,
@@ -156,7 +158,7 @@ def main(argv=None):
                                    get.pop['population']['pacific'],
                                    get.pop['population']['latino']],
                          'year' : 2010},
-                       {'state' : 'Tennessee',
+                       {'state' : state,
                         'county' : '*' } )
 
         # pop.pretty_print(d, ['total', 'white', 'black', 'native', 'asian', 'pacific', 'latino', 'state', 'county'])
@@ -167,7 +169,7 @@ def main(argv=None):
                                    get.econ['mean'],
                                    get.econ['capita']],
                          'year' : 2012},
-                       {'state' : 'Texas',
+                       {'state' : state,
                         'county' : '*'} )
                         
         # pop.pretty_print(d, ['median', 'mean', 'capita', 'state', 'county'], replace = {'N':0,'-':0})
