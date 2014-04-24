@@ -19,8 +19,8 @@ colors = ['#993355',
           '#FF9933',
           '#FF3333']
 
-def _get_econ_data(state_abbr):
-    f = open(os.path.join(data_dir, '%s_econ.psv' % state_abbr), 'r')
+def _get_econ_data(data_file, state_abbr):
+    f = open(data_file, 'r')
     reader = csv.reader(f, delimiter='|')
 
     highest_median = -1
@@ -43,8 +43,8 @@ def _get_econ_data(state_abbr):
 
     return county_xs, county_ys, median_econ_data, highest_median
 
-def _get_pop_data(state_abbr):
-    f = open(os.path.join(data_dir, '%s_population.psv' % state_abbr), 'r')
+def _get_pop_data(data_file):
+    f = open(data_file, 'r')
     reader = csv.reader(f, delimiter='|')
 
     highest_pop = -1
@@ -90,20 +90,13 @@ def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200
     axis().major_tick_line_color = None
     show()
 
-data_dir = sys.argv[1]
+state_name = sys.argv[1]
+state_abbr = sys.argv[2]
+data_file = sys.argv[3]
+template_dir = sys.argv[4]
 
-tools = "box_zoom,reset"
-# output_file("geospatial.html")
-output_server("gs", title="Geospatial Example")
+output_file(template_dir + '/' + state_name + '.html')
 
-county_xs, county_ys, econ_data, highest_median = _get_econ_data('ky')
-county_colors = _color_econ_data('ky', county_xs, county_ys, econ_data, highest_median)
+county_xs, county_ys, econ_data, highest_median = _get_econ_data(data_file, state_abbr)
+county_colors = _color_econ_data(state_abbr, county_xs, county_ys, econ_data, highest_median)
 _output_econ_data(county_xs, county_ys, county_colors, 500, 250)
-
-county_xs, county_ys, econ_data, highest_median = _get_econ_data('tn')
-county_colors = _color_econ_data('tn', county_xs, county_ys, econ_data, highest_median)
-_output_econ_data(county_xs, county_ys, county_colors, 500, 200)
-
-county_xs, county_ys, econ_data, highest_median = _get_econ_data('tx')
-county_colors = _color_econ_data('tx', county_xs, county_ys, econ_data, highest_median)
-_output_econ_data(county_xs, county_ys, county_colors, 500, 400)

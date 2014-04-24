@@ -1,6 +1,0 @@
-backend:
-   - storage:
-        personality: "cassandra"
-        instances: 1
-connectors:
-   - personality: "pydata/census"

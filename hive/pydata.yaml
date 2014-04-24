@@ -1,9 +1,0 @@
-backend:
-   - storage:
-        personality: "hadoop"
-        instances: 1
-        layers:
-           - "hive"
-connectors:
-   - personality: "pydata/census"
-     ports: [8080]
