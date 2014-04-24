@@ -13,13 +13,13 @@ ADD ./README.md /home/ferry/pydata/
 ADD ./Dockerfile /home/ferry/pydata/
 ADD ./bokeh /home/ferry/pydata/bokeh/
 ADD ./census /home/ferry/pydata/census/
-ADD ./populate.sh /home/ferry/pydata/
-ADD ./start.sh /home/ferry/pydata/
-RUN chmod a+x /home/ferry/pydata/populate.sh
-RUN chmod a+x /home/ferry/pydata/start.sh
+ADD ./download.sh /home/ferry/pydata/
+ADD ./startsimple.sh /home/ferry/pydata/
+RUN chmod a+x /home/ferry/pydata/download.sh
+RUN chmod a+x /home/ferry/pydata/startsimple.sh
 
 # Now go ahead and download all the datasets for our demo. 
-RUN /home/ferry/pydata/populate.sh
+RUN /home/ferry/pydata/download.sh
 
 # Default command will run our plot and start the Bokeh server. 
-CMD ["/home/ferry/pydata/start.sh"]
+CMD ["/home/ferry/pydata/startsimple.sh"]

@@ -2,6 +2,7 @@ import csv
 import sys
 from bokeh.sampledata import us_counties, unemployment
 from bokeh.plotting import *
+from cassandra.cluster import Cluster
 
 # The county code is a tuple (state ID, county ID). 
 # The "patches" graph is an array of arrays. Each element is a set of
@@ -19,53 +20,38 @@ colors = ['#993355',
           '#FF9933',
           '#FF3333']
 
-def _get_econ_data(data_file, state_abbr):
-    f = open(data_file, 'r')
-    reader = csv.reader(f, delimiter='|')
+def _connect_to_cassandra(keyspace):
+    """
+    Connect to the Cassandra cluster and return the session.
+    """
 
+    if 'BACKEND_STORAGE_IP' in os.environ:
+        host = os.environ['BACKEND_STORAGE_IP']
+    else:
+        host = 'localhost'
+
+    cluster = Cluster([host])
+    session = cluster.connect(keyspace)
+
+    return session
+
+def _get_econ_data(state_abbr):
     highest_median = -1
     median_econ_data = {}
-    for row in reader:
-        median, mean, capita, state, state_cd, county, county_cd = row
-        median_econ_data[(int(state_cd), int(county_cd))] = median
+    county_xs=[]
+    county_ys=[]
 
-        if median > highest_median:
-            highest_median = median
+    query = """SELECT * FROM sensor_data
+               WHERE sensor_id=%(sensor)s
+               and time>%(time)s
+               ORDER BY time DESC"""
 
-    county_xs=[
-        us_counties.data[code]['lons'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
-    county_ys=[
-        us_counties.data[code]['lats'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
+    values = { 'time': ts,
+               'sensor': sensor }
+
+    rows = session.execute(query, values)
 
     return county_xs, county_ys, median_econ_data, highest_median
-
-def _get_pop_data(data_file):
-    f = open(data_file, 'r')
-    reader = csv.reader(f, delimiter='|')
-
-    highest_pop = -1
-    pop_data = {}
-    for row in reader:
-        total, _, _, _, _, _, _, state, state_cd, county, county_cd = row
-        pop_data[(int(state_cd), int(county_cd))] = total
-
-        if total > highest_pop:
-            highest_pop = total
-
-    county_xs=[
-        us_counties.data[code]['lons'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
-    county_ys=[
-        us_counties.data[code]['lats'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
-
-    return county_xs, county_ys, pop_data, highest_pop
 
 def _color_econ_data(state_abbr, county_xs, county_ys, median_econ_data, highest_median):
     county_colors = []
