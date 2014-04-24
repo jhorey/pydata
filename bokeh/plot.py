@@ -28,7 +28,6 @@ def _get_econ_data(data_file, state_abbr):
     for row in reader:
         median, mean, capita, state, state_cd, county, county_cd = row
         median_econ_data[(int(state_cd), int(county_cd))] = median
-
         if median > highest_median:
             highest_median = median
 

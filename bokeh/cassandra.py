@@ -20,7 +20,7 @@ colors = ['#993355',
           '#FF9933',
           '#FF3333']
 
-def _connect_to_cassandra(keyspace):
+def _connect_to_cassandra():
     """
     Connect to the Cassandra cluster and return the session.
     """
@@ -31,25 +31,32 @@ def _connect_to_cassandra(keyspace):
         host = 'localhost'
 
     cluster = Cluster([host])
-    session = cluster.connect(keyspace)
+    session = cluster.connect('census')
 
     return session
 
 def _get_econ_data(state_abbr):
+    query = """SELECT * FROM acs_economic_data
+               WHERE state_name=%(state)s
+            """
+    values = { 'state': state }
+    rows = session.execute(query, values)
+
     highest_median = -1
     median_econ_data = {}
-    county_xs=[]
-    county_ys=[]
+    for row in rows:
+        median_econ_data[(int(row.state_cd), int(row.count_cd))] = row.median
+        if median > highest_median:
+            highest_median = median
 
-    query = """SELECT * FROM sensor_data
-               WHERE sensor_id=%(sensor)s
-               and time>%(time)s
-               ORDER BY time DESC"""
-
-    values = { 'time': ts,
-               'sensor': sensor }
-
-    rows = session.execute(query, values)
+    county_xs=[
+        us_counties.data[code]['lons'] for code in us_counties.data
+        if us_counties.data[code]['state'] == state_abbr
+    ]
+    county_ys=[
+        us_counties.data[code]['lats'] for code in us_counties.data
+        if us_counties.data[code]['state'] == state_abbr
+    ]
 
     return county_xs, county_ys, median_econ_data, highest_median
 
@@ -78,11 +85,11 @@ def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200
 
 state_name = sys.argv[1]
 state_abbr = sys.argv[2]
-data_file = sys.argv[3]
-template_dir = sys.argv[4]
+template_dir = sys.argv[3]
 
 output_file(template_dir + '/' + state_name + '.html')
 
-county_xs, county_ys, econ_data, highest_median = _get_econ_data(data_file, state_abbr)
+_connect_to_cassandra()
+county_xs, county_ys, econ_data, highest_median = _get_econ_data(state_abbr)
 county_colors = _color_econ_data(state_abbr, county_xs, county_ys, econ_data, highest_median)
 _output_econ_data(county_xs, county_ys, county_colors, 500, 250)
