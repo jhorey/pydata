@@ -13,7 +13,7 @@ ADD ./README.md /home/ferry/pydata/
 ADD ./Dockerfile /home/ferry/pydata/
 ADD ./bokeh /home/ferry/pydata/bokeh/
 ADD ./census /home/ferry/pydata/census/
-ADD ./scripts/createtables.cql /home/ferry/pydata/
+ADD ./scripts/createtable.cql /home/ferry/pydata/
 ADD ./scripts/download.sh /home/ferry/pydata/
 ADD ./scripts/startcas.sh /service/runscripts/start/
 RUN chmod a+x /home/ferry/pydata/download.sh

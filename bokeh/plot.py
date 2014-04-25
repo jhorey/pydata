@@ -42,30 +42,6 @@ def _get_econ_data(data_file, state_abbr):
 
     return county_xs, county_ys, median_econ_data, highest_median
 
-def _get_pop_data(data_file):
-    f = open(data_file, 'r')
-    reader = csv.reader(f, delimiter='|')
-
-    highest_pop = -1
-    pop_data = {}
-    for row in reader:
-        total, _, _, _, _, _, _, state, state_cd, county, county_cd = row
-        pop_data[(int(state_cd), int(county_cd))] = total
-
-        if total > highest_pop:
-            highest_pop = total
-
-    county_xs=[
-        us_counties.data[code]['lons'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
-    county_ys=[
-        us_counties.data[code]['lats'] for code in us_counties.data
-        if us_counties.data[code]['state'] == state_abbr
-    ]
-
-    return county_xs, county_ys, pop_data, highest_pop
-
 def _color_econ_data(state_abbr, county_xs, county_ys, median_econ_data, highest_median):
     county_colors = []
     for county_id in us_counties.data:

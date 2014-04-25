@@ -2,7 +2,7 @@ import csv
 import sys
 from bokeh.sampledata import us_counties, unemployment
 from bokeh.plotting import *
-from cassandra.cluster import Cluster
+from cassandra.cluster import Cluster, NoHostAvailable
 
 # The county code is a tuple (state ID, county ID). 
 # The "patches" graph is an array of arrays. Each element is a set of
@@ -30,10 +30,36 @@ def _connect_to_cassandra():
     else:
         host = 'localhost'
 
-    cluster = Cluster([host])
-    session = cluster.connect('census')
+    try:
+        cluster = Cluster([host])
+        session = cluster.connect()
+    except NoHostAvailable as e:
+        print e
+        return None
 
+    print "ok"
     return session
+
+def _create_tables(session):
+    query = """
+            CREATE KEYSPACE census
+            WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}
+            """
+    session.execute(query)
+    session.set_keyspace("census")
+    query = """
+            CREATE TABLE acs_economic_data  (
+                state_cd TEXT,
+                state_name TEXT,
+                county_cd TEXT,
+                county_name TEXT,
+                median INT,
+                mean INT,
+                capita INT,
+                PRIMARY KEY(count_cd, state_cd)
+            )
+            """
+    session.execute(query)
 
 def _get_econ_data(state_abbr):
     query = """SELECT * FROM acs_economic_data
@@ -83,13 +109,16 @@ def _output_econ_data(county_xs, county_ys, county_colors, width=500, height=200
     axis().major_tick_line_color = None
     show()
 
-state_name = sys.argv[1]
-state_abbr = sys.argv[2]
-template_dir = sys.argv[3]
+session = _connect_to_cassandra()
+if sys.argv[1] == "create":
+    _create_tables(session)
+else:
+    state_name = sys.argv[2]
+    state_abbr = sys.argv[3]
+    template_dir = sys.argv[4]
 
-output_file(template_dir + '/' + state_name + '.html')
+    output_file(template_dir + '/' + state_name + '.html')
 
-_connect_to_cassandra()
-county_xs, county_ys, econ_data, highest_median = _get_econ_data(state_abbr)
-county_colors = _color_econ_data(state_abbr, county_xs, county_ys, econ_data, highest_median)
-_output_econ_data(county_xs, county_ys, county_colors, 500, 250)
+    county_xs, county_ys, econ_data, highest_median = _get_econ_data(state_abbr)
+    county_colors = _color_econ_data(state_abbr, county_xs, county_ys, econ_data, highest_median)
+    _output_econ_data(county_xs, county_ys, county_colors, 500, 250)

@@ -3,11 +3,12 @@ CREATE KEYSPACE census WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replica
 USE census;
 
 CREATE TABLE acs_economic_data  (
-       state_cd STRING,
-       state_name STRING,
-       county_cd STRING,
-       county_name STRING,
+       state_cd TEXT,
+       state_name TEXT,
+       county_cd TEXT,
+       county_name TEXT,
        median INT,
        mean INT,
-       capita INT
+       capita INT,
+       PRIMARY KEY(count_cd, state_cd)
 );

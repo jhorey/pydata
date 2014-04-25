@@ -8,6 +8,11 @@ function print {
     echo -e "${GREEN} ${1} ${NC}"
 }
 
+if [[ $# == 0 ]]; then
+    print "usage: make.sh (docker|ferry)"
+    exit 1
+fi
+
 if [[ $1 == "docker" ]]; then
     print "Creating plain Docker image"
     cp Dockerfile.simple Dockerfile
@@ -16,6 +21,6 @@ if [[ $1 == "docker" ]]; then
 else
     print "Creating Cassandra Ferry image"
     cp Dockerfile.ferry Dockerfile
-    ferry start pydata.yaml -b ./ 
+    ferry start cassandra.yml -b ./ 
     rm Dockerfile
 fi
