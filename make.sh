@@ -17,6 +17,7 @@ if [[ $1 == "docker" ]]; then
     print "Creating plain Docker image"
     cp Dockerfile.simple Dockerfile
     docker build -t pydata/census .
+    docker run -p 5006:5006 -d pydata/census
     rm Dockerfile
 else
     print "Creating Cassandra Ferry image"

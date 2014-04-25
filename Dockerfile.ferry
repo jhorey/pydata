@@ -15,9 +15,12 @@ ADD ./bokeh /home/ferry/pydata/bokeh/
 ADD ./census /home/ferry/pydata/census/
 ADD ./scripts/createtable.cql /home/ferry/pydata/
 ADD ./scripts/download.sh /home/ferry/pydata/
-ADD ./scripts/startcas.sh /service/runscripts/start/
 RUN chmod a+x /home/ferry/pydata/download.sh
-RUN chmod a+x /service/runscripts/start/startcas.sh
 
 # Now go ahead and download all the datasets for our demo. 
 RUN /home/ferry/pydata/download.sh
+
+# Place the start scripts here so that we that we won't
+# destroy the build cache if we change the start script. 
+ADD ./scripts/startcas.sh /service/runscripts/start/
+RUN chmod a+x /service/runscripts/start/startcas.sh
