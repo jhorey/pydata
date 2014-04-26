@@ -16,11 +16,10 @@ fi
 if [[ $1 == "docker" ]]; then
     print "Creating plain Docker image"
     cp Dockerfile.simple Dockerfile
-    docker build -t pydata/census .
-    docker run -p 5006:5006 -d pydata/census
+    docker build -t ferry/pydata .
     rm Dockerfile
-else
-    print "Creating Cassandra Ferry image"
+elif [[ $1 == "ferry" ]]; then
+    print "Creating and starting Cassandra Ferry image"
     cp Dockerfile.ferry Dockerfile
     ferry start cassandra.yml -b ./ 
     rm Dockerfile

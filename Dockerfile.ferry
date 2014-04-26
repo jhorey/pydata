@@ -1,5 +1,5 @@
 FROM ferry/cassandra-client
-NAME pydata/census-cassandra
+NAME ferry/pydata-cassandra
 
 RUN mkdir -p /home/ferry/pydata/bokeh /home/ferry/pydata/census /home/ferry/pydata/data /home/ferry/pydata/bokeh/templates
 

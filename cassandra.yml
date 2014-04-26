@@ -3,5 +3,5 @@ backend:
         personality: "cassandra"
         instances: 1
 connectors:
-   - personality: "pydata/census-cassandra"
+   - personality: "ferry/pydata-cassandra"
      ports: ["8000:8000"]

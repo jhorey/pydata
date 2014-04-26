@@ -1,5 +1,5 @@
 FROM ubuntu:12.04
-NAME pydata/census
+NAME ferry/pydata
 
 RUN mkdir -p /home/ferry/pydata/bokeh /home/ferry/pydata/census /home/ferry/pydata/data /home/ferry/pydata/bokeh/templates
 
