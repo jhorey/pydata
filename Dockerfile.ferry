@@ -26,3 +26,7 @@ ADD ./scripts/startcas.sh /service/runscripts/start/
 ADD ./scripts/restartcas.sh /service/runscripts/restart/
 RUN chmod a+x /service/runscripts/start/startcas.sh
 RUN chmod a+x /service/runscripts/restart/restartcas.sh
+
+# Clean everything
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*

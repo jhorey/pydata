@@ -21,5 +21,10 @@ RUN chmod a+x /home/ferry/pydata/startsimple.sh
 # Now go ahead and download all the datasets for our demo. 
 RUN /home/ferry/pydata/download.sh
 
+# Clean everything
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
+
 # Default command will run our plot and start the Bokeh server. 
 CMD ["/home/ferry/pydata/startsimple.sh"]
+
