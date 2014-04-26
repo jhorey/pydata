@@ -23,4 +23,6 @@ RUN /home/ferry/pydata/download.sh
 # Place the start scripts here so that we that we won't
 # destroy the build cache if we change the start script. 
 ADD ./scripts/startcas.sh /service/runscripts/start/
+ADD ./scripts/restartcas.sh /service/runscripts/restart/
 RUN chmod a+x /service/runscripts/start/startcas.sh
+RUN chmod a+x /service/runscripts/restart/restartcas.sh

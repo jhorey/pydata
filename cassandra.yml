@@ -4,4 +4,4 @@ backend:
         instances: 1
 connectors:
    - personality: "pydata/census-cassandra"
-     ports: ["5006:5006"]
+     ports: ["8000:8000"]
